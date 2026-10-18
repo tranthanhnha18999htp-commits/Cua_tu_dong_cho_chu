@@ -11,6 +11,3 @@
 #define RELAY_CLOSE_PIN 6 
 #define LED_RED_PIN     10  
 
-MFRC522 mfrc522(SS_PIN, RST_PIN); 
-byte bossUID[] = {0xDE, 0xAD, 0xBE, 0xEF}; 
-bool isDoorOpen = false;

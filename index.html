@@ -2,35 +2,102 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Mô phỏng Đèn Giao Thông</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô phỏng Cửa Tự Động RFID</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <style>
-    body { background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; margin: 0; }
-    .box { background: #333; padding: 20px; border-radius: 20px; display: flex; flex-direction: column; gap: 15px; }
-    .light { width: 70px; height: 70px; border-radius: 50%; opacity: 0.2; }
-    .red { background: red; }
-    .yellow { background: gold; }
-    .green { background: #00ff00; }
-    .active { opacity: 1; box-shadow: 0 0 30px currentColor; }
+    .door-left, .door-right { transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    .door-open .door-left { transform: translateX(-90%); }
+    .door-open .door-right { transform: translateX(90%); }
+    .scanner-green { box-shadow: 0 0 20px #22c55e; }
+    .scanner-red { box-shadow: 0 0 20px #ef4444; }
   </style>
 </head>
-<body>
-  <h2>Mô phỏng Đèn Giao Thông</h2>
-  <div class="box">
-    <div id="r" class="light red active"></div>
-    <div id="y" class="light yellow"></div>
-    <div id="g" class="light green"></div>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div class="max-w-xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col items-center">
+    <h1 class="text-xl font-bold text-white mb-1 flex items-center gap-2">
+      🚪 CỬA TỰ ĐỘNG THẺ TỪ RFID
+    </h1>
+    <p class="text-xs text-slate-400 mb-6">Bấm nút quẹt thẻ bên dưới để thử nghiệm đóng/mở cửa</p>
+
+    <!-- Cánh cửa trượt tự động -->
+    <div id="doorBox" class="relative w-80 h-56 bg-slate-950 border-4 border-slate-700 rounded-xl overflow-hidden flex justify-between shadow-inner">
+      <div class="absolute inset-0 flex items-center justify-center text-slate-600 font-bold text-sm">
+        🏢 PHÒNG BẢO MẬT
+      </div>
+      <!-- Cánh trái -->
+      <div class="door-left w-1/2 h-full bg-blue-500/20 border-r-2 border-blue-400/50 backdrop-blur-sm z-10 flex items-center justify-end pr-1">
+        <div class="w-1.5 h-16 bg-slate-300 rounded"></div>
+      </div>
+      <!-- Cánh phải -->
+      <div class="door-right w-1/2 h-full bg-blue-500/20 border-l-2 border-blue-400/50 backdrop-blur-sm z-10 flex items-center justify-start pl-1">
+        <div class="w-1.5 h-16 bg-slate-300 rounded"></div>
+      </div>
+    </div>
+
+    <!-- Màn hình hiển thị LCD & Đầu đọc thẻ -->
+    <div class="w-80 mt-4 bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center gap-4">
+      <div id="scanner" class="w-16 h-16 rounded-xl bg-slate-800 border-2 border-blue-500/40 flex flex-col items-center justify-center text-xl">
+        💳
+      </div>
+      <div class="flex-1">
+        <div class="text-[10px] text-slate-400 font-mono">MÀN HÌNH LCD 16x2</div>
+        <div id="lcdText" class="text-sm font-bold font-mono text-amber-400 mt-0.5">VUI LÒNG QUẸT THẺ</div>
+        <div id="subText" class="text-xs text-slate-400 font-mono">TRẠNG THÁI: CHỜ</div>
+      </div>
+    </div>
+
+    <!-- Các thẻ để quẹt thử -->
+    <div class="w-80 mt-5 space-y-2">
+      <div class="text-xs font-semibold text-slate-300">Chọn thẻ quẹt thử:</div>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="swipe('NV-8899', 'Nguyễn Văn An', true)" class="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-600/50 hover:bg-emerald-900/60 text-emerald-300 text-xs font-bold transition-all">
+          ✅ Thẻ Hợp Lệ (NV-8899)
+        </button>
+        <button onclick="swipe('KH-0000', 'Người Lạ', false)" class="p-2.5 rounded-lg bg-rose-950/40 border border-rose-600/50 hover:bg-rose-900/60 text-rose-300 text-xs font-bold transition-all">
+          ❌ Thẻ Sai / Hết Hạn
+        </button>
+      </div>
+    </div>
   </div>
-  <h3 id="txt" style="margin-top: 25px;">Đèn ĐỎ: Dừng lại (3s)</h3>
 
   <script>
-    let step = 0;
-    setInterval(() => {
-      step = (step + 1) % 3;
-      document.getElementById('r').className = 'light red ' + (step === 0 ? 'active' : '');
-      document.getElementById('y').className = 'light yellow ' + (step === 1 ? 'active' : '');
-      document.getElementById('g').className = 'light green ' + (step === 2 ? 'active' : '');
-      document.getElementById('txt').innerText = step === 0 ? 'Đèn ĐỎ: Dừng lại (3s)' : (step === 1 ? 'Đèn VÀNG: Giảm tốc độ (2s)' : 'Đèn XANH: Được đi (3s)');
-    }, 2500);
+    let timer = null;
+    const door = document.getElementById('doorBox');
+    const lcd = document.getElementById('lcdText');
+    const sub = document.getElementById('subText');
+    const sc = document.getElementById('scanner');
+
+    function swipe(id, name, valid) {
+      if (timer) clearTimeout(timer);
+      if (valid) {
+        sc.className = "w-16 h-16 rounded-xl bg-slate-800 border-2 border-emerald-500 scanner-green flex items-center justify-center text-xl";
+        lcd.className = "text-sm font-bold font-mono text-emerald-400 mt-0.5";
+        lcd.innerText = "CHÀO: " + name;
+        sub.innerText = "CỬA ĐANG MỞ (3s)";
+        door.classList.add('door-open');
+
+        timer = setTimeout(() => {
+          door.classList.remove('door-open');
+          reset();
+        }, 3500);
+      } else {
+        sc.className = "w-16 h-16 rounded-xl bg-slate-800 border-2 border-rose-500 scanner-red flex items-center justify-center text-xl";
+        lcd.className = "text-sm font-bold font-mono text-rose-400 mt-0.5";
+        lcd.innerText = "THẺ KHÔNG HỢP LỆ!";
+        sub.innerText = "TỪ CHỐI TRUY CẬP";
+
+        timer = setTimeout(() => { reset(); }, 2000);
+      }
+    }
+
+    function reset() {
+      sc.className = "w-16 h-16 rounded-xl bg-slate-800 border-2 border-blue-500/40 flex items-center justify-center text-xl";
+      lcd.className = "text-sm font-bold font-mono text-amber-400 mt-0.5";
+      lcd.innerText = "VUI LÒNG QUẸT THẺ";
+      sub.innerText = "TRẠNG THÁI: CHỜ";
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Mô phỏng Đèn Giao Thông</title>
+  <style>
+    body { background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; margin: 0; }
+    .box { background: #333; padding: 20px; border-radius: 20px; display: flex; flex-direction: column; gap: 15px; }
+    .light { width: 70px; height: 70px; border-radius: 50%; opacity: 0.2; }
+    .red { background: red; }
+    .yellow { background: gold; }
+    .green { background: #00ff00; }
+    .active { opacity: 1; box-shadow: 0 0 30px currentColor; }
+  </style>
+</head>
+<body>
+  <h2>Mô phỏng Đèn Giao Thông</h2>
+  <div class="box">
+    <div id="r" class="light red active"></div>
+    <div id="y" class="light yellow"></div>
+    <div id="g" class="light green"></div>
+  </div>
+  <h3 id="txt" style="margin-top: 25px;">Đèn ĐỎ: Dừng lại (3s)</h3>
+
+  <script>
+    let step = 0;
+    setInterval(() => {
+      step = (step + 1) % 3;
+      document.getElementById('r').className = 'light red ' + (step === 0 ? 'active' : '');
+      document.getElementById('y').className = 'light yellow ' + (step === 1 ? 'active' : '');
+      document.getElementById('g').className = 'light green ' + (step === 2 ? 'active' : '');
+      document.getElementById('txt').innerText = step === 0 ? 'Đèn ĐỎ: Dừng lại (3s)' : (step === 1 ? 'Đèn VÀNG: Giảm tốc độ (2s)' : 'Đèn XANH: Được đi (3s)');
+    }, 2500);
+  </script>
+</body>
+</html>

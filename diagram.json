@@ -3,7 +3,68 @@
   "author": "Anonymous",
   "editor": "wokwi",
   "parts": [
-    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0, "left": 0 }
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 40,
+      "left": 100,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "relay-open",
+      "top": -80,
+      "left": -20,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "relay-close",
+      "top": -80,
+      "left": 160,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led-red",
+      "top": -30,
+      "left": 360,
+      "attrs": {
+        "color": "red"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 30,
+      "left": 340,
+      "attrs": {
+        "value": "220"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn-swipe",
+      "top": 120,
+      "left": -60,
+      "attrs": {
+        "color": "green",
+        "label": "Quet the"
+      }
+    }
   ],
-  "connections": []
+  "connections": [
+    [ "uno:5", "relay-open:IN", "orange", [ "v-20", "h-15" ] ],
+    [ "uno:5V", "relay-open:VCC", "red", [ "v-40", "h-70" ] ],
+    [ "uno:GND.1", "relay-open:GND", "black", [ "v-30", "h-60" ] ],
+    [ "uno:6", "relay-close:IN", "blue", [ "v-25", "h30" ] ],
+    [ "uno:5V", "relay-close:VCC", "red", [ "v-40", "h40" ] ],
+    [ "uno:GND.1", "relay-close:GND", "black", [ "v-30", "h50" ] ],
+    [ "uno:10", "r1:1", "gold", [ "v-10", "h10" ] ],
+    [ "r1:2", "led-red:A", "gold", [ "v0" ] ],
+    [ "uno:GND.2", "led-red:C", "black", [ "v-20", "h40" ] ],
+    [ "uno:4", "btn-swipe:2.1", "green", [ "v40", "h-120" ] ],
+    [ "uno:GND.3", "btn-swipe:1.1", "black", [ "v50", "h-140" ] ]
+  ],
+  "dependencies": {}
 }

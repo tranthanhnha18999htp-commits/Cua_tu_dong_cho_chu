@@ -1,3 +1,20 @@
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN          4   
+#define SPI_SCK         3   
+#define SPI_MOSI        2  
+#define SPI_MISO        1  
+#define RST_PIN         0   
+
+#define RELAY_OPEN_PIN  5
+#define RELAY_CLOSE_PIN 6 
+#define LED_RED_PIN     10  
+
+MFRC522 mfrc522(SS_PIN, RST_PIN); 
+byte bossUID[] = {0xDE, 0xAD, 0xBE, 0xEF}; 
+bool isDoorOpen = false;
+
 void setup() {
   Serial.begin(115200);
   
